@@ -3,8 +3,8 @@ let randomPos
 class Asteroid{
     constructor(pos,size){
         this.velAndPosPicker = random()
-        this.r = size || random(100,200)
-        this.maxVel = map(this.r,100,200,5,2)
+        this.r = size || random(75,200)
+        this.maxVel = map(this.r,50,200,3,2)
         // Choose randomly which direction the asteroid comes from
         if(this.velAndPosPicker <= 0.25){ // Start on TOP
             randomPos = createVector(random(width),-this.r)
@@ -22,26 +22,30 @@ class Asteroid{
         this.pos = pos || randomPos
 
         this.magnitudes = []
-        this.spikyness = this.r / 10 // number of vertices that the asteroid has
+        this.spikyness = this.r / 7 // number of vertices that the asteroid has
         for(let i = 0; i < this.spikyness ; i++){
             this.magnitudes.push(random(this.r * (0.55),this.r))// Random distancrs away from the center of the asteroid
         }
-        this.angle = 360 / this.spikyness
+        this.angle = (360/ this.spikyness)
         // Some random variation in the angle rotated by to create less polygonal looking asteroids
         this.randomAngles = []
         for(let i = 0; i < this.magnitudes.length; i ++){
-            this.randomAngles.push(random(-this.spikyness,this.spikyness))
+            this.randomAngles.push(random(-this.spikyness * (1/this.r),this.spikyness * (1/this.r)))
         }
         this.active = true
+
+
     }
     destroy(){
-        if(this.r < 100){
+        asteroidExplosion.play()
+        if(this.r < 75){
             this.active = false
         }else{
             asteroids.push(new Asteroid(createVector(this.pos.x,this.pos.y),this.r/2))
             asteroids.push(new Asteroid(createVector(this.pos.x,this.pos.y),this.r/2))
             this.active = false
         }
+
     }
     update(){
         this.pos.add(this.vel)

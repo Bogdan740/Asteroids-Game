@@ -4,10 +4,14 @@ class Bullet{
         this.heading = heading
         this.size = size
         this.onScreen = true
+        this.timer = 45
     }
     update(){
-        if(this.onScreen){
-            this.boost(25)
+        this.timer --
+        if(this.timer > 0){
+            this.boost(20)
+        }else{
+            this.onScreen = false
         }
     }
     boost(force){
@@ -17,14 +21,25 @@ class Bullet{
     show(){
         push()
         noStroke()
-        fill(255,0,0)
+        fill(0,255,0)
         ellipse(this.pos.x,this.pos.y,this.size)
         pop()
     }
     offScreen(){
-        if(this.pos.x > width + this.size || this.pos.x < -this.size || this.pos.y > height + this.size || this.pos.y < -this.size){
-            this.onScreen = false
-
+        if(this.pos.x > width){
+            this.pos.x = 0
+        }
+        
+        if(this.pos.x < 0){
+            this.pos.x = width
+        }
+        
+        if(this.pos.y > height){
+            this.pos.y = 0
+        }
+        
+        if(this.pos.y < 0){
+            this.pos.y = height
         }
     }
 }

@@ -1,9 +1,21 @@
 let ship;
 let asteroids = [];
 let startNumAsteroids;
-function setup(){    
+
+let laserSound
+let asteroidExplosion
+
+
+
+function preload(){
+    laserSound = loadSound('sounds/laserEffect.mp3');
+    asteroidExplosion = loadSound('sounds/asteroidExplosion.mp3')
+}
+function setup(){   
+    laserSound.setVolume(0.2)
     createCanvas(windowWidth,windowHeight);
-    startNumAsteroids = floor(random(3,8))
+    let start = windowWidth/200
+    startNumAsteroids = floor(random(start,1.5*start))
     ship = new Ship()
     for(let i = 0; i < startNumAsteroids; i++){
         asteroids.push(new Asteroid())
@@ -15,6 +27,7 @@ function setup(){
 function draw(){
     background(25);
 
+
     for(let i = asteroids.length -1; i >= 0; i--){
         asteroids[i].update()
         asteroids[i].show()
@@ -23,6 +36,9 @@ function draw(){
             asteroids.splice(i,1)
         }
 
+    }
+    if(asteroids.length < startNumAsteroids){
+        asteroids.push(new Asteroid())
     }
 
     ship.update()
@@ -38,7 +54,7 @@ function draw(){
 }
 
 function keyPressed(){
-    if(keyCode == 32){
+    if(keyCode == 32 && ship.bullets.length < 4){
         ship.shoot()
     }
 }

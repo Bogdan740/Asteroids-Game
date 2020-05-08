@@ -7,6 +7,8 @@ class Ship{
         this.vel = createVector(0,0)
         this.heading = 0
         this.bullets = []
+
+
     }
     update(){
         this.vel.add(this.acc)
@@ -69,7 +71,8 @@ class Ship{
     }
     shoot(){
         let newPos = createVector(this.pos.x,this.pos.y - this.size/4)
-        this.bullets.push(new Bullet(newPos,this.heading-90,this.size/10))
+        this.bullets.push(new Bullet(newPos,this.heading-90,this.size/8))
+        laserSound.play()
     }
 
 
