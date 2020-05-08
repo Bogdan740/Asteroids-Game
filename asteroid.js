@@ -1,22 +1,25 @@
+let randomPos
+
 class Asteroid{
-    constructor(){
+    constructor(pos,size){
         this.velAndPosPicker = random()
-        this.r = random(50,150)
-        this.maxVel = map(this.r,50,150,10,2)
+        this.r = size || random(100,200)
+        this.maxVel = map(this.r,100,200,5,2)
         // Choose randomly which direction the asteroid comes from
         if(this.velAndPosPicker <= 0.25){ // Start on TOP
-            this.pos = createVector(random(width),-this.r)
+            randomPos = createVector(random(width),-this.r)
             this.vel = createVector(random(-this.maxVel,this.maxVel),random(this.maxVel))
         }else if(this.velAndPosPicker > 0.25 && this.velAndPosPicker <= 0.5){// Start on LEFT
-            this.pos = createVector(-this.r,random(height))
+            randomPos = createVector(-this.r,random(height))
             this.vel = createVector(random(this.maxVel),random(-this.maxVel,this.maxVel))
         }else if(this.velAndPosPicker > 0.5 && this.velAndPosPicker <= 0.75){// Start on BOTTOM
-            this.pos = createVector(-this.r,random(height))
+            randomPos = createVector(-this.r,random(height))
             this.vel = createVector(random(this.maxVel),random(-this.maxVel,this.maxVel))
         }else if(this.velAndPosPicker > 0.75 && this.velAndPosPicker <= 1){// Start on RIGHT
-            this.pos = createVector(width + this.r,random(height))
+            randomPos = createVector(width + this.r,random(height))
             this.vel = createVector(random(-this.maxVel),random(-this.maxVel,this.maxVel))
         }
+        this.pos = pos || randomPos
 
         this.magnitudes = []
         this.spikyness = this.r / 10 // number of vertices that the asteroid has
@@ -29,9 +32,16 @@ class Asteroid{
         for(let i = 0; i < this.magnitudes.length; i ++){
             this.randomAngles.push(random(-this.spikyness,this.spikyness))
         }
+        this.active = true
     }
-    destroy(size){
-
+    destroy(){
+        if(this.r < 100){
+            this.active = false
+        }else{
+            asteroids.push(new Asteroid(createVector(this.pos.x,this.pos.y),this.r/2))
+            asteroids.push(new Asteroid(createVector(this.pos.x,this.pos.y),this.r/2))
+            this.active = false
+        }
     }
     update(){
         this.pos.add(this.vel)
@@ -40,13 +50,14 @@ class Asteroid{
             let distance = dist(ship.bullets[i].pos.x,ship.bullets[i].pos.y,this.pos.x,this.pos.y)
             if(distance < this.r){
                 this.destroy()
+                ship.bullets.splice(i ,1)
             }
         }
     
     }
     show(){
-        stroke(255,0,0)
-        noFill()
+        stroke(255,0,0,200)
+        fill(255,0,0,100)
         beginShape()
         for(let i = 0; i < this.magnitudes.length; i++){
             let r = this.magnitudes[i]

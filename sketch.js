@@ -13,12 +13,16 @@ function setup(){
 }
 
 function draw(){
-    background(0);
+    background(25);
 
-    for(let i = 0; i < asteroids.length; i++){
+    for(let i = asteroids.length -1; i >= 0; i--){
         asteroids[i].update()
         asteroids[i].show()
         asteroids[i].offScreen()
+        if(!asteroids[i].active){
+            asteroids.splice(i,1)
+        }
+
     }
 
     ship.update()
